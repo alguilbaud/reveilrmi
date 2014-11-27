@@ -73,9 +73,9 @@ public class Humain extends UnicastRemoteObject implements IHumain{
 		for (int i : prochainesSonneries){
 			dateProchainEvenement = Math.min(dateProchainEvenement, i);
 		}
-		if((etat == Etat.Reveille) && (dateMaxArmement < dateProchainEvenement){
-      dateProchainEvenement = dateMaxArmement;
-    }
+		if((etat == Etat.Reveille) && (dateMaxArmement < dateProchainEvenement)){
+			dateProchainEvenement = dateMaxArmement;
+		}
       
 		if(nouveauTemps < temps){
 			System.out.println("Erreur, nouveau temps (" + nouveauTemps + ") inferieur a temps de l'humain (" + temps + ")");
@@ -98,8 +98,7 @@ public class Humain extends UnicastRemoteObject implements IHumain{
 	}
 	
 	public void comportement(){
-		Scanner scan;
-		String saisie;
+		Scanner scan = new Scanner(System.in);
 		while (true){
 			int dateProchaineSonnerie = Integer.MAX_VALUE;
 			for (int i : prochainesSonneries){
@@ -123,13 +122,10 @@ public class Humain extends UnicastRemoteObject implements IHumain{
 					System.out.println("Armer le reveil et se coucher (Taper 2)");
 				}
 				System.out.println();
-				scan = new Scanner(System.in);
-				saisie = scan.nextLine();
-				int type = Integer.parseInt(saisie);
+				int type = scan.nextInt();
 				if ((type == 1) && (dateMaxArmement > temps)){
 					System.out.println("Avancer de combien de temps ? (Entrer un entier)");
-					saisie = scan.nextLine();
-					int duree = Integer.parseInt(saisie);
+					int duree = scan.nextInt();
 					int nouvelleDate = temps + duree;
 					//si on a des sonneries à entendre avant, on prendre la date de la prochaine sonnerie
 					for(int i : prochainesSonneries){
@@ -158,7 +154,6 @@ public class Humain extends UnicastRemoteObject implements IHumain{
 				else{
 					System.out.println("Erreur : mauvaise saisie (soit n'existe pas, soit indisponible)");
 				}
-				scan.close();
 			}		
 			else if (etat == Etat.Intermediaire){
 				System.out.println();
@@ -167,18 +162,23 @@ public class Humain extends UnicastRemoteObject implements IHumain{
 				System.out.println("Actions possibles :");
 				System.out.println("Se recoucher (Taper 1)");
 				System.out.println("Se reveiller (Taper 2)");
-				scan = new Scanner(System.in);
-				saisie = scan.nextLine();
-				int type = Integer.parseInt(saisie);
+				int type = scan.nextInt();
 				if(type == 1){
 					seRendort();
 				}
 				else if (type == 2){
+					try {
+						reveil.desarme();
+					} catch (RemoteException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					seReveille();
 				}
 				else{
 					System.out.println("Erreur : mauvaise saisie (1 ou 2 uniquement)");
 				}
+				
 			}
 			else if ((etat == Etat.Endormi) && (prochainReveilSpontanne == temps)){
 				reveilSpontanne();

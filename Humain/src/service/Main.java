@@ -9,9 +9,9 @@ public class Main {
 		// TODO Auto-generated method stub
          try {
         	IReveil reveil = (IReveil)Naming.lookup("rmi://localhost:8000/reveil");
-		    Humain humain= new Humain(reveil);
-		    Naming.rebind("rmi://localhost:1098/humain", humain);
+		    Humain humain= new Humain(reveil); 
 		    LocateRegistry.createRegistry(1098);
+		    Naming.rebind("rmi://localhost:1098/humain", humain);
 		    reveil.enregistrerHumain("rmi://localhost:1098/humain");
 		    humain.comportement();
 
