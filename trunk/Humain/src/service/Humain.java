@@ -73,7 +73,10 @@ public class Humain extends UnicastRemoteObject implements IHumain{
 		for (int i : prochainesSonneries){
 			dateProchainEvenement = Math.min(dateProchainEvenement, i);
 		}
-		
+		if((etat == Etat.Reveille) && (dateMaxArmement < dateProchaineEvenement){
+      dateProchaineEvenement = dateMaxArmement;
+    }
+      
 		if(nouveauTemps < temps){
 			System.out.println("Erreur, nouveau temps (" + nouveauTemps + ") inferieur a temps de l'humain (" + temps + ")");
 		}
