@@ -3,6 +3,7 @@ package service;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.LinkedList;
+import java.util.Scanner;
 
 public class Humain extends UnicastRemoteObject implements IHumain{
 
@@ -17,7 +18,7 @@ public class Humain extends UnicastRemoteObject implements IHumain{
 	private int dateMaxArmement = 276;
 	
 	enum Etat {
-		Reveille, Endormi, Intermidiaire
+		Reveille, Endormi, Intermediaire
 	};
 	
 	public Humain(IReveil reveil) throws RemoteException {
@@ -34,15 +35,17 @@ public class Humain extends UnicastRemoteObject implements IHumain{
 	
 	public void reveilSpontanne()
 	{
-		this.etat=Etat.Intermidiaire;
+		this.etat=Etat.Intermediaire;
 		prochainReveilSpontanne = Integer.MAX_VALUE;
 		System.out.println("temps = " + temps + " : Reveil spontanne de l'humain");
 	}
 	
 	public void entendSonnerie(){
-		this.etat=Etat.Intermidiaire;
-		prochainReveilSpontanne = Integer.MAX_VALUE;
-		System.out.println("temps = " + temps + " : La sonnerie retentit");
+		if (etat == Etat.Endormi){
+			this.etat=Etat.Intermediaire;
+			prochainReveilSpontanne = Integer.MAX_VALUE;
+			System.out.println("temps = " + temps + " : La sonnerie retentit");
+		}
 	}
 	
 	public void seRendort(){
@@ -84,6 +87,69 @@ public class Humain extends UnicastRemoteObject implements IHumain{
 	}
 	
 	public boolean estPret(){ //true s'il n'y a plus d'evenements devant s'actionner a la date temps, false s'il en reste
-		return (prochainesSonneries.size() == 0) && (prochainReveilSpontanne > temps);
+		boolean pret = (prochainReveilSpontanne > temps) && (dateMaxArmement > temps);
+		for (int i : prochainesSonneries){
+			pret = pret && (i > temps);
+		}
+		return pret;
+	}
+	
+	public void comportement(){
+		while (true){
+			int dateProchaineSonnerie = Integer.MAX_VALUE;
+			for (int i : prochainesSonneries){
+				dateProchaineSonnerie = Math.min(dateProchaineSonnerie, i);
+			}
+			if(temps == dateProchaineSonnerie){
+				prochainesSonneries.remove(temps);
+				entendSonnerie();
+			}
+			else if (etat == Etat.Reveille){
+				System.out.println();
+				System.out.println("Date (temps) actuelle : " + temps);
+				System.out.println("Date minimum pour armer le réveil : " + dateMinArmement);
+				System.out.println("Date maximum pour armer le réveil : " + dateMaxArmement);
+				System.out.println();
+				System.out.println("Actions possibles :");
+				if (dateMaxArmement > temps){
+					System.out.println("Avancer dans le temps (Taper 1)");
+				}
+				if (dateMinArmement <= temps){
+					System.out.println("Armer le reveil et se coucher (Taper 2)");
+				}
+				System.out.println();
+				Scanner scan = new Scanner(System.in);
+				String s = scan.nextLine();
+				int type = Integer.parseInt(s);
+				if (type == 1 && (dateMaxArmement > temps)){
+					
+				}
+				else if (type == 2){
+				
+				}
+				else{
+					System.out.println("Erreur : mauvaise saisie (soit n'existe pas, soit indisponible)");
+				}
+				scan.close();
+			}		
+			else if (etat == Etat.Intermediaire){
+				
+			}
+			else if ((etat == Etat.Endormi) && (prochainReveilSpontanne == temps)){
+				
+			}
+			else if (estPret()){
+				int dateProchainEvenement = prochainReveilSpontanne;
+				for (int i : prochainesSonneries){
+					dateProchainEvenement = Math.min(dateProchainEvenement, i);
+				}
+				try {
+					temps = reveil.avancerTemps(dateProchainEvenement);
+				} catch (RemoteException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
 	}
 }
