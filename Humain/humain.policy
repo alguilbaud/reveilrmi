@@ -1,0 +1,3 @@
+grant codeBase "file:/comptes/E096489E/workspaceLuna/FSE-Humain/bin/-" {
+    permission java.security.AllPermission;
+};
