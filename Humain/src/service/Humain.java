@@ -30,6 +30,8 @@ public class Humain extends UnicastRemoteObject implements IHumain{
 		this.etat=Etat.Endormi;
 		//on calcule le prochain reveil spontanne, qui est une valeur aleatoire entre 12 et 144
 		prochainReveilSpontanne = temps + 12 + (int) Math.floor(132 * Math.random());
+		dateMinArmement = Integer.MAX_VALUE;
+		dateMaxArmement = Integer.MAX_VALUE;
 		System.out.println("temps = " + temps + " : L'humain va se coucher");
 	}
 	
@@ -44,8 +46,8 @@ public class Humain extends UnicastRemoteObject implements IHumain{
 		if (etat == Etat.Endormi){
 			this.etat=Etat.Intermediaire;
 			prochainReveilSpontanne = Integer.MAX_VALUE;
-			System.out.println("temps = " + temps + " : La sonnerie retentit");
 		}
+		System.out.println("temps = " + temps + " : La sonnerie retentit");
 	}
 	
 	public void seRendort(){
