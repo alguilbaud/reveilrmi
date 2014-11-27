@@ -14,6 +14,7 @@ public class Main {
 			LocateRegistry.createRegistry(8000);
 			Reveil reveil = new Reveil();
             Naming.rebind("rmi://localhost:8000/reveil", reveil);
+            reveil.comportement();
             //IHumain  stub= (IHumain)Naming.lookup("rmi://localhost:1098/humain");
     } catch (Exception e) {
             e.printStackTrace();
