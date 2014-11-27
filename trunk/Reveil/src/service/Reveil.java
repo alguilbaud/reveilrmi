@@ -19,17 +19,17 @@ public class Reveil extends UnicastRemoteObject implements IReveil{
 	public void armee() throws RemoteException
 	{    		
 	     this.etat=Etat.EstArme.toString();
-	     System.out.println("je suis armé");
+	     System.out.println("je suis arme");
 	}
 	public void sonne() 
 	{    		
 	     this.etat=Etat.Attend.toString();
 	}
 	@Override
-	public void deSarmee() throws RemoteException
+	public void desarmee() throws RemoteException
 	{    		
 	     this.etat=Etat.EstDesarme.toString();
-	     System.out.println("je suis désarmé");
+	     System.out.println("je suis desarme");
 	}
 	public String getEtat() {
 		return etat;
