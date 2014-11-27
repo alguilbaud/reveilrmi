@@ -7,8 +7,7 @@ import java.rmi.server.UnicastRemoteObject;
 
 public class Reveil extends UnicastRemoteObject implements IReveil{
 	
-	private Etat etat;
-	private IHumain humain = null;
+	private IHumain humain;
 	
 	private int temps = 0; //temps logique ecoule, equivaut a la date 
 	private int prochaineSonnerie = Integer.MAX_VALUE; //quand le reveil doit attendre pour sonner, on stocke la date a laquelle il va sonner, MAX_VALUE quand aucune sonnerie en attente
@@ -16,13 +15,10 @@ public class Reveil extends UnicastRemoteObject implements IReveil{
 	private int prochainDesarmement = Integer.MAX_VALUE; //date d'arrivee du prochain desarmement qui a ete envoye mais est encore en transit, MAX_VALUE quand aucun
 	
 	
-	enum Etat {
-		EstArme, Attend, EstDesarme
-	};
+
 
 	public Reveil() throws RemoteException{
-		this.etat = Etat.EstDesarme;
-		comportement();
+		humain = null;
 	}
 	
 	public void enregistrerHumain(String adresseHumain) throws RemoteException{
@@ -32,6 +28,7 @@ public class Reveil extends UnicastRemoteObject implements IReveil{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		comportement();
 	}
 	
 	@Override
@@ -43,7 +40,6 @@ public class Reveil extends UnicastRemoteObject implements IReveil{
 	}
 	
 	private void armerSonnerie(){ //methode pour armer reellement le réveil
-		this.etat=Etat.EstArme;
 		prochaineSonnerie = temps + 96; //prochaine sonnerie prevue 8h plus tard
 		System.out.println("temps = " + temps + " : Reveil arme");
 	}
@@ -57,7 +53,6 @@ public class Reveil extends UnicastRemoteObject implements IReveil{
 	}
 	
 	private void desarmerSonnerie(){
-		this.etat=Etat.EstDesarme;
 		prochaineSonnerie = Integer.MAX_VALUE;
 	    System.out.println("temps = " + temps + " : Reveil desarme");
 	}
