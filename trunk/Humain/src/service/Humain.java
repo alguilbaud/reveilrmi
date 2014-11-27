@@ -124,7 +124,7 @@ public class Humain extends UnicastRemoteObject implements IHumain{
 				saisie = scan.nextLine();
 				int type = Integer.parseInt(saisie);
 				if ((type == 1) && (dateMaxArmement > temps)){
-					System.out.println("Avancer de combien de temps ? (entrer un entier)");
+					System.out.println("Avancer de combien de temps ? (Entrer un entier)");
 					saisie = scan.nextLine();
 					int duree = Integer.parseInt(saisie);
 					int nouvelleDate = temps + duree;
@@ -158,11 +158,27 @@ public class Humain extends UnicastRemoteObject implements IHumain{
 				scan.close();
 			}		
 			else if (etat == Etat.Intermediaire){
-				//TODO
-				
+				System.out.println();
+				System.out.println("Date (temps) actuelle : " + temps);
+				System.out.println("L'humain est dans l'etat intermediaire.");
+				System.out.println("Actions possibles :");
+				System.out.println("Se recoucher (Taper 1)");
+				System.out.println("Se reveiller (Taper 2)");
+				scan = new Scanner(System.in);
+				saisie = scan.nextLine();
+				int type = Integer.parseInt(saisie);
+				if(type == 1){
+					seRendort();
+				}
+				else if (type == 2){
+					seReveille();
+				}
+				else{
+					System.out.println("Erreur : mauvaise saisie (1 ou 2 uniquement)");
+				}
 			}
 			else if ((etat == Etat.Endormi) && (prochainReveilSpontanne == temps)){
-				//TODO
+				reveilSpontanne();
 			}
 			else if (estPret()){
 				int dateProchainEvenement = prochainReveilSpontanne;
