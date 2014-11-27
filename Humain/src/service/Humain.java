@@ -73,8 +73,8 @@ public class Humain extends UnicastRemoteObject implements IHumain{
 		for (int i : prochainesSonneries){
 			dateProchainEvenement = Math.min(dateProchainEvenement, i);
 		}
-		if((etat == Etat.Reveille) && (dateMaxArmement < dateProchaineEvenement){
-      dateProchaineEvenement = dateMaxArmement;
+		if((etat == Etat.Reveille) && (dateMaxArmement < dateProchainEvenement){
+      dateProchainEvenement = dateMaxArmement;
     }
       
 		if(nouveauTemps < temps){
