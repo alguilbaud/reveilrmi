@@ -8,6 +8,7 @@ import java.rmi.server.UnicastRemoteObject;
 public class Reveil extends UnicastRemoteObject implements IReveil{
 	
 	private IHumain humain;
+	private String adresseHumain;
 	
 	private int temps = 0; //temps logique ecoule, equivaut a la date 
 	private int prochaineSonnerie = Integer.MAX_VALUE; //quand le reveil doit attendre pour sonner, on stocke la date a laquelle il va sonner, MAX_VALUE quand aucune sonnerie en attente
@@ -19,15 +20,11 @@ public class Reveil extends UnicastRemoteObject implements IReveil{
 
 	public Reveil() throws RemoteException{
 		humain = null;
+		adresseHumain = "";
 	}
 	
 	public void enregistrerHumain(String adresseHumain) throws RemoteException{
-		try {
-			humain = (IHumain)Naming.lookup(adresseHumain);
-		} catch (MalformedURLException | NotBoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		this.adresseHumain = adresseHumain;
 	}
 	
 	@Override
@@ -76,8 +73,14 @@ public class Reveil extends UnicastRemoteObject implements IReveil{
 	}
 	
 	public void comportement(){ //methode qui coordonne les actions a faire a chaque date et qui propose d'avancer dans le temps quand il n'y a plus rien a faire
-		while(humain == null){}
+		while(adresseHumain.equals("")){}
 		System.out.println("bof");
+		try {
+			humain = (IHumain)Naming.lookup(adresseHumain);
+		} catch (MalformedURLException | NotBoundException | RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		while(true){
 			if (prochaineSonnerie == temps){
 				try {
