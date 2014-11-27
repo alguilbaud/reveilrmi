@@ -28,7 +28,6 @@ public class Reveil extends UnicastRemoteObject implements IReveil{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		comportement();
 	}
 	
 	@Override
@@ -77,6 +76,8 @@ public class Reveil extends UnicastRemoteObject implements IReveil{
 	}
 	
 	public void comportement(){ //methode qui coordonne les actions a faire a chaque date et qui propose d'avancer dans le temps quand il n'y a plus rien a faire
+		while(humain == null){}
+		System.out.println("bof");
 		while(true){
 			if (prochaineSonnerie == temps){
 				try {
