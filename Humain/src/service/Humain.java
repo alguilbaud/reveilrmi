@@ -95,6 +95,8 @@ public class Humain extends UnicastRemoteObject implements IHumain{
 	}
 	
 	public void comportement(){
+		Scanner scan;
+		String saisie;
 		while (true){
 			int dateProchaineSonnerie = Integer.MAX_VALUE;
 			for (int i : prochainesSonneries){
@@ -118,14 +120,37 @@ public class Humain extends UnicastRemoteObject implements IHumain{
 					System.out.println("Armer le reveil et se coucher (Taper 2)");
 				}
 				System.out.println();
-				Scanner scan = new Scanner(System.in);
-				String s = scan.nextLine();
-				int type = Integer.parseInt(s);
-				if (type == 1 && (dateMaxArmement > temps)){
-					
+				scan = new Scanner(System.in);
+				saisie = scan.nextLine();
+				int type = Integer.parseInt(saisie);
+				if ((type == 1) && (dateMaxArmement > temps)){
+					System.out.println("Avancer de combien de temps ? (entrer un entier)");
+					saisie = scan.nextLine();
+					int duree = Integer.parseInt(saisie);
+					int nouvelleDate = temps + duree;
+					//si on a des sonneries à entendre avant, on prendre la date de la prochaine sonnerie
+					for(int i : prochainesSonneries){
+						nouvelleDate = Math.min(nouvelleDate, i);
+					}
+					//si dateMaxArmement est inférieure, la nouvelle date vaut dateMaxArmement
+					if(dateMaxArmement < nouvelleDate){
+						nouvelleDate = dateMaxArmement;
+					}
+					try {
+						temps = reveil.avancerTemps(nouvelleDate);
+					} catch (RemoteException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
-				else if (type == 2){
-				
+				else if ((type == 2) && (dateMinArmement <= temps)){
+					try {
+						reveil.arme();
+					} catch (RemoteException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					seCoucher();
 				}
 				else{
 					System.out.println("Erreur : mauvaise saisie (soit n'existe pas, soit indisponible)");
@@ -133,10 +158,11 @@ public class Humain extends UnicastRemoteObject implements IHumain{
 				scan.close();
 			}		
 			else if (etat == Etat.Intermediaire){
+				//TODO
 				
 			}
 			else if ((etat == Etat.Endormi) && (prochainReveilSpontanne == temps)){
-				
+				//TODO
 			}
 			else if (estPret()){
 				int dateProchainEvenement = prochainReveilSpontanne;
